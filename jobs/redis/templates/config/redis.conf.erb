@@ -20,19 +20,23 @@ daemonize no
 # If port 0 is specified Redis will not listen on a TCP socket.
 port <%= p("port") %>
 
-# If bind is specified in your manifest file, it will get set otherwise
-# it will fall back to default behavior, i.e. protected mode
-# 
+# If bind_static_ip is set to true in your manifest file, it will set the bind property
+# for each instance in your cluster to the static IP which was assigned to the instance
+# If it is set to false, it will not set the bind property which will force it to 
+# fall back to default behavior, i.e. protected mode due to bind not being set
+#  
+# bind_static_ip true
+#
+<% if_p("bind_static_ip") do |bind_static_ip| %>
+<% if bind_static_ip == true %>
+bind <%= spec.ip %>
+<% end %>
+<% end %>
+
 # If you want you can bind a single interface, if the bind option is not
 # specified all the interfaces will listen for incoming connections.
 #
 # bind 127.0.0.1
-<% if_p("bind") do |bind| %>
-  <% if bind.to_s != "" %>
-    bind <%= p("bind") %>
-  <% end %>
-<% end %>
-
 
 # Specify the path for the unix socket that will be used to listen for
 # incoming connections. There is no default, so Redis will not listen
