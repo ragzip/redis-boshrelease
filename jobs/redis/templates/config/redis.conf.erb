@@ -20,10 +20,19 @@ daemonize no
 # If port 0 is specified Redis will not listen on a TCP socket.
 port <%= p("port") %>
 
+# If bind is specified in your manifest file, it will get set otherwise
+# it will fall back to default behavior, i.e. protected mode
+# 
 # If you want you can bind a single interface, if the bind option is not
 # specified all the interfaces will listen for incoming connections.
 #
 # bind 127.0.0.1
+<% if_p("bind") do |bind| %>
+  <% if bind.to_s != "" %>
+    bind <%= p("bind") %>
+  <% end %>
+<% end %>
+
 
 # Specify the path for the unix socket that will be used to listen for
 # incoming connections. There is no default, so Redis will not listen
